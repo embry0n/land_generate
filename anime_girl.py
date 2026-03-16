@@ -46,7 +46,7 @@ def normalize(arr, method="linear", gamma=0.4):
 # -----------------------------
 # 1. Загрузка изображения
 # -----------------------------
-img = Image.open("anime.jpeg").convert("L")  # grayscale
+img = Image.open("anime_girl.jpg").convert("L")  # grayscale
 img = img.resize((200, 200))                # уменьшаем для скорости
 
 heightmap = np.array(img) / 255.0
