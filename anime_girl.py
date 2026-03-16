@@ -79,49 +79,9 @@ print(terrain)
 # -----------------------------
 # 4. Визуализация
 # -----------------------------
-fig, ax = plt.subplots(1,4, figsize=(18,5))
-
-ax[0].imshow(img, cmap="gray")
-ax[0].set_title("Исходная картинка")
-
-ax[1].imshow(heightmap, cmap="terrain")
-ax[1].set_title("Карта высот (из картинки)")
-
-ax[2].imshow(noise, cmap="gray")
-ax[2].set_title("Сгенерированный шум")
-
-ax[3].imshow(terrain, cmap="terrain")
-ax[3].set_title("Итоговый terrain")
-
-for a in ax:
-    a.axis("off")
 
 
-# 3D поверхность
 from mpl_toolkits.mplot3d import Axes3D
-
-x = np.arange(terrain.shape[0])
-y = np.arange(terrain.shape[1])
-x, y = np.meshgrid(x, y)
-
-fig2 = plt.figure(figsize=(10,7))
-ax2 = fig2.add_subplot(111, projection='3d')
-
-ax2.plot_surface(
-    x, y, terrain,
-    cmap="terrain",
-    linewidth=0,
-    antialiased=False
-)
-
-ax2.set_title("3D Ландшафт из картинки")
-
-plt.show(block=False)
-plt.pause(0.001)
-
-
-
-
 from matplotlib.colors import ListedColormap
 
 
@@ -148,33 +108,54 @@ def generate_world(heightmap):
 
     return world
 
-
-def draw_world(world):
-
-    colors = [
-        "#1f4aa8",  # вода
-        "#f2d16b",  # пляж
-        "#6dbf4b",  # равнина
-        "#2e7d32",  # лес
-        "#8d6e63",  # горы
-        "#ffffff"   # снег
-    ]
-
-    cmap = ListedColormap(colors)
-
-    plt.figure(figsize=(10,10))
-    plt.imshow(world, cmap=cmap)
-    plt.title("Сгенерированный мир")
-    plt.axis("off")
-    plt.show(block=False)
-    plt.pause(0.001)
-
-
-# -----------------------------
-# пример использования
-# -----------------------------
 def gen_terrain():
-    world = generate_world(terrain)
+    # Создаём общую фигуру
+    fig = plt.figure(figsize=(15, 10))
 
-    draw_world(world)
+    # 1. Исходное изображение (2D)
+    ax1 = fig.add_subplot(2, 3, 1)
+    ax1.imshow(img, cmap="gray")
+    ax1.set_title("Исходная картинка")
+    ax1.axis("off")
+
+    # 2. Карта высот
+    ax2 = fig.add_subplot(2, 3, 2)
+    ax2.imshow(heightmap, cmap="terrain")
+    ax2.set_title("Карта высот")
+    ax2.axis("off")
+
+    # 3. Шум
+    ax3 = fig.add_subplot(2, 3, 3)
+    ax3.imshow(noise, cmap="gray")
+    ax3.set_title("Сгенерированный шум")
+    ax3.axis("off")
+
+    # 4. Итоговый terrain (2D)
+    ax4 = fig.add_subplot(2, 3, 4)
+    ax4.imshow(terrain, cmap="terrain")
+    ax4.set_title("Итоговый terrain")
+    ax4.axis("off")
+
+    # 5. 3D поверхность
+    ax5 = fig.add_subplot(2, 3, 5, projection='3d')
+    x = np.arange(terrain.shape[0])
+    y = np.arange(terrain.shape[1])
+    x, y = np.meshgrid(x, y)
+    ax5.plot_surface(x, y, terrain, cmap="terrain", linewidth=0, antialiased=False)
+    ax5.set_title("3D Ландшафт")
+
+    # 6. Сгенерированный мир
+    ax6 = fig.add_subplot(2, 3, 6)
+    world = generate_world(terrain)
+    colors = ["#1f4aa8", "#f2d16b", "#6dbf4b", "#2e7d32", "#8d6e63", "#ffffff"]
+    cmap = ListedColormap(colors)
+    ax6.imshow(world, cmap=cmap)
+    ax6.set_title("Сгенерированный мир")
+    ax6.axis("off")
+
+    plt.tight_layout()  # чтобы подписи не налезали друг на друга
+    plt.show(block=False)
+    plt.pause(2)
     return terrain
+
+#gen_terrain()
